@@ -40,6 +40,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [total, setTotal] = useState(0);
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
@@ -68,6 +69,7 @@ export default function Home() {
 
   useEffect(() => {
     setLoading(true);
+    setError("");
     const params = new URLSearchParams();
     if (debouncedSearch) params.append("search", debouncedSearch);
     if (selectedCategory) params.append("category", selectedCategory);
@@ -75,12 +77,16 @@ export default function Home() {
     params.append("limit", "20");
 
     fetch(`/api/products?${params}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data) => {
         setProducts(data.products);
         setTotal(data.total);
-        setLoading(false);
-      });
+      })
+      .catch(() => setError("Failed to load products. Please try again."))
+      .finally(() => setLoading(false));
   }, [debouncedSearch, selectedCategory, selectedSubCategory]);
 
   return (
@@ -154,6 +160,10 @@ export default function Home() {
         {loading ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">Loading products...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-destructive">{error}</p>
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-12">
