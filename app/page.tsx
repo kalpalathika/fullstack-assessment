@@ -44,6 +44,7 @@ export default function Home() {
     string | undefined
   >(undefined);
   const [loading, setLoading] = useState(true);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     fetch("/api/categories")
@@ -53,13 +54,14 @@ export default function Home() {
 
   useEffect(() => {
     if (selectedCategory) {
-      fetch(`/api/subcategories`)
+      fetch(`/api/subcategories?category=${encodeURIComponent(selectedCategory)}`)
         .then((res) => res.json())
         .then((data) => setSubCategories(data.subCategories));
     } else {
       setSubCategories([]);
-      setSelectedSubCategory(undefined);
+      setSelectedSubCategory("");
     }
+    setSelectedSubCategory("");
   }, [selectedCategory]);
 
   useEffect(() => {
@@ -74,6 +76,7 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products);
+        setTotal(data.total);
         setLoading(false);
       });
   }, [search, selectedCategory, selectedSubCategory]);
@@ -159,7 +162,7 @@ export default function Home() {
         ) : (
           <>
             <p className="text-sm text-muted-foreground mb-4">
-              Showing {products.length} products
+              Showing {products.length} of {total} products
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => (
