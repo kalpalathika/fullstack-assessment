@@ -37,12 +37,8 @@ export default function Home() {
   const [categories, setCategories] = useState<string[]>([]);
   const [subCategories, setSubCategories] = useState<string[]>([]);
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
-    undefined
-  );
-  const [selectedSubCategory, setSelectedSubCategory] = useState<
-    string | undefined
-  >(undefined);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
 
@@ -59,9 +55,9 @@ export default function Home() {
         .then((data) => setSubCategories(data.subCategories));
     } else {
       setSubCategories([]);
-      setSelectedSubCategory("");
+      setSelectedSubCategory(undefined);
     }
-    setSelectedSubCategory("");
+    setSelectedSubCategory(undefined);
   }, [selectedCategory]);
 
   useEffect(() => {
@@ -100,7 +96,7 @@ export default function Home() {
 
             <Select
               value={selectedCategory}
-              onValueChange={(value) => setSelectedCategory(value || undefined)}
+              onValueChange={(value) => setSelectedCategory(value)}
             >
               <SelectTrigger className="w-full md:w-[200px]">
                 <SelectValue placeholder="All Categories" />
@@ -117,9 +113,7 @@ export default function Home() {
             {selectedCategory && subCategories.length > 0 && (
               <Select
                 value={selectedSubCategory}
-                onValueChange={(value) =>
-                  setSelectedSubCategory(value || undefined)
-                }
+                onValueChange={(value) => setSelectedSubCategory(value || undefined)}
               >
                 <SelectTrigger className="w-full md:w-[200px]">
                   <SelectValue placeholder="All Subcategories" />
@@ -139,7 +133,7 @@ export default function Home() {
                 variant="outline"
                 onClick={() => {
                   setSearch("");
-                  setSelectedCategory(undefined);
+                  setSelectedCategory("");
                   setSelectedSubCategory(undefined);
                 }}
               >
