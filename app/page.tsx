@@ -29,6 +29,7 @@ interface Product {
   categoryName: string;
   subCategoryName: string;
   imageUrls: string[];
+  retailPrice?: number;
 }
 
 export default function Home() {
@@ -169,7 +170,7 @@ export default function Home() {
                     query: { product: JSON.stringify(product) },
                   }}
                 >
-                  <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
+                  <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer flex flex-col">
                     <CardHeader className="p-0">
                       <div className="relative h-48 w-full overflow-hidden rounded-t-lg bg-muted">
                         {product.imageUrls?.[0] && (
@@ -183,7 +184,7 @@ export default function Home() {
                         )}
                       </div>
                     </CardHeader>
-                    <CardContent className="pt-4">
+                    <CardContent className="pt-4 flex-1">
                       <CardTitle className="text-base line-clamp-2 mb-2">
                         {product.title}
                       </CardTitle>
@@ -196,7 +197,12 @@ export default function Home() {
                         </Badge>
                       </CardDescription>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="flex flex-col gap-2">
+                      {product.retailPrice && (
+                        <p className="text-lg font-semibold w-full">
+                          ${product.retailPrice.toFixed(2)}
+                        </p>
+                      )}
                       <Button variant="outline" className="w-full">
                         View Details
                       </Button>

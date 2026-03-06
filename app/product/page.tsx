@@ -17,6 +17,7 @@ interface Product {
   imageUrls: string[];
   featureBullets: string[];
   retailerSku: string;
+  retailPrice?: number;
 }
 
 export default function ProductPage() {
@@ -113,6 +114,9 @@ export default function ProductPage() {
                 <Badge variant="outline">{product.subCategoryName}</Badge>
               </div>
               <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
+              {product.retailPrice && (
+                <p className="text-2xl font-semibold mb-2">${product.retailPrice.toFixed(2)}</p>
+              )}
               <p className="text-sm text-muted-foreground">SKU: {product.retailerSku}</p>
             </div>
 
